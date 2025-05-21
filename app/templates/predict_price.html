@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .prediction-card {
+        background: rgba(26, 26, 26, 0.8);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .card-header {
+        background: rgba(26, 26, 26, 0.9);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .card-header h3 {
+        color: var(--secondary-color);
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    .form-control, .form-select {
+        background-color: rgba(26, 26, 26, 0.8);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        color: #ffffff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(26, 26, 26, 0.9);
+        border-color: var(--secondary-color);
+        color: #ffffff;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--secondary-color), #c19b2e);
+        border: none;
+        color: var(--primary-color);
+        font-weight: 600;
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #c19b2e, var(--secondary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="prediction-card card" data-aos="fade-up">
+                <div class="card-header">
+                    <h3 class="text-center">Car Price Prediction</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group mb-3">
+                            {{ form.brand.label(class="form-label") }}
+                            {{ form.brand(class="form-select") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.model.label(class="form-label") }}
+                            {{ form.model(class="form-select") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.year.label(class="form-label") }}
+                            {{ form.year(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.mileage.label(class="form-label") }}
+                            {{ form.mileage(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.transmission.label(class="form-label") }}
+                            {{ form.transmission(class="form-select") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.owner.label(class="form-label") }}
+                            {{ form.owner(class="form-select") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.fuel_type.label(class="form-label") }}
+                            {{ form.fuel_type(class="form-select") }}
+                        </div>
+                        <div class="text-center">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('brand').addEventListener('change', function() {
+    var brand = this.value;
+    fetch('/get_models/' + brand)
+        .then(response => response.json())
+        .then(models => {
+            var modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '';
+            models.forEach(function(model) {
+                var option = document.createElement('option');
+                option.value = model;
+                option.text = model;
+                modelSelect.appendChild(option);
+            });
+        });
+});
+</script>
+{% endblock %} 
